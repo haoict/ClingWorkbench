@@ -15,6 +15,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import org.fourthline.cling.model.message.header.STAllHeader;
 import org.fourthline.cling.model.meta.Action;
 import org.fourthline.cling.model.meta.ActionArgument;
 import org.fourthline.cling.model.meta.Device;
@@ -71,8 +72,10 @@ public class MainFrame extends javax.swing.JFrame implements IOnDeviceEvent {
                 // Neu selected node la dang SERVICE thi enable button use service
                 if (dd.getType() == DeviceDetailType.SERVICE) {
                     jButtonUseService.setEnabled(true);
+                    jButtonMonitorService.setEnabled(true);
                 } else {
                     jButtonUseService.setEnabled(false);
+                    jButtonMonitorService.setEnabled(false);
                 }
                 
                 // Neu selected node la dang ACTION thi enable button Invoke Action
@@ -94,6 +97,10 @@ public class MainFrame extends javax.swing.JFrame implements IOnDeviceEvent {
         @Override
         public void valueChanged(ListSelectionEvent e) {
 
+            jButtonUseService.setEnabled(false);
+            jButtonMonitorService.setEnabled(false);
+            jButtonInvokeAction.setEnabled(false);  
+            
             if (!e.getValueIsAdjusting()) {
                 // Get selected item in device list
                 Device selectedDevice = myDeviceList.get(jListDevices.getSelectedIndex());
@@ -213,8 +220,13 @@ public class MainFrame extends javax.swing.JFrame implements IOnDeviceEvent {
         jTreeDeviceDetail = new javax.swing.JTree();
         jButtonUseService = new javax.swing.JButton();
         jButtonInvokeAction = new javax.swing.JButton();
+        jButtonMonitorService = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jButtonRefreshDeviceList = new javax.swing.JButton();
+        jButtonSmarthome = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Cling Workbench - ICT K56 - Network Software Architecture");
 
         jListDevices.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -247,38 +259,79 @@ public class MainFrame extends javax.swing.JFrame implements IOnDeviceEvent {
             }
         });
 
+        jButtonMonitorService.setText("Monitor Service");
+        jButtonMonitorService.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonMonitorServiceActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Available devices:");
+
+        jButtonRefreshDeviceList.setText("Refresh");
+        jButtonRefreshDeviceList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRefreshDeviceListActionPerformed(evt);
+            }
+        });
+
+        jButtonSmarthome.setText("Smarthome");
+        jButtonSmarthome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSmarthomeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonShutdown))
-            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButtonRefreshDeviceList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonSmarthome)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonShutdown))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonUseService)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonMonitorService)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonInvokeAction)
-                        .addGap(0, 269, Short.MAX_VALUE))
+                        .addGap(0, 156, Short.MAX_VALUE))
                     .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonUseService)
-                    .addComponent(jButtonInvokeAction))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonUseService)
+                        .addComponent(jButtonInvokeAction)
+                        .addComponent(jButtonMonitorService))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonShutdown))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonShutdown)
+                    .addComponent(jButtonRefreshDeviceList)
+                    .addComponent(jButtonSmarthome))
+                .addContainerGap())
         );
 
         pack();
@@ -342,6 +395,45 @@ public class MainFrame extends javax.swing.JFrame implements IOnDeviceEvent {
         }
     }//GEN-LAST:event_jButtonInvokeActionActionPerformed
 
+    private void jButtonMonitorServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMonitorServiceActionPerformed
+        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) jTreeDeviceDetail.getLastSelectedPathComponent();
+                        
+        if (selectedNode != null) {
+            DeviceDetail dd = (DeviceDetail) selectedNode.getUserObject();
+            // Check if this selected node is ACTION type, so we enable button use service
+            if (dd.getType() == DeviceDetailType.SERVICE) {
+                Device selectedDevice = myDeviceList.get(jListDevices.getSelectedIndex());
+                // create a UI Frame to use service
+                
+                // seach for action and service
+                for (Service service : selectedDevice.getServices()) {
+                    DefaultMutableTreeNode serviceNode = new DefaultMutableTreeNode(new DeviceDetail(service.getServiceType().getType(), "", "", DeviceDetailType.SERVICE));
+                    if (selectedNode.toString().equals(service.getServiceType().getType())) {
+                        MonitorServiceFrame msf = new MonitorServiceFrame(upnpServer.getUpnpService(), selectedDevice, service);
+                        msf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        msf.setVisible(true);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_jButtonMonitorServiceActionPerformed
+
+    private void jButtonRefreshDeviceListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshDeviceListActionPerformed
+        if (upnpServer == null) return;
+        try {
+            upnpServer.getUpnpService().getRegistry().removeAllRemoteDevices();
+            upnpServer.getUpnpService().getControlPoint().search();
+        } catch (Exception ex ) {
+            
+        }
+    }//GEN-LAST:event_jButtonRefreshDeviceListActionPerformed
+
+    private void jButtonSmarthomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSmarthomeActionPerformed
+        ConsoleFrame cf = new ConsoleFrame(this);
+        cf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        cf.setVisible(true);
+    }//GEN-LAST:event_jButtonSmarthomeActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -351,7 +443,8 @@ public class MainFrame extends javax.swing.JFrame implements IOnDeviceEvent {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
+        
+        /*try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -360,7 +453,8 @@ public class MainFrame extends javax.swing.JFrame implements IOnDeviceEvent {
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
+        }*/
+        
         //</editor-fold>
         
         //</editor-fold>
@@ -375,8 +469,12 @@ public class MainFrame extends javax.swing.JFrame implements IOnDeviceEvent {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonInvokeAction;
+    private javax.swing.JButton jButtonMonitorService;
+    private javax.swing.JButton jButtonRefreshDeviceList;
     private javax.swing.JButton jButtonShutdown;
+    private javax.swing.JButton jButtonSmarthome;
     private javax.swing.JButton jButtonUseService;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JList jListDevices;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -398,7 +496,7 @@ public class MainFrame extends javax.swing.JFrame implements IOnDeviceEvent {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(ex.getMessage());
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -408,7 +506,17 @@ public class MainFrame extends javax.swing.JFrame implements IOnDeviceEvent {
             myDeviceList.add(device);
             myDeviceListModel.addElement(device.getDisplayString());
         } catch (Exception ex) {
-            Logger.getLogger(ex.getMessage());
+            System.out.println(ex.getMessage());
         }
     }
+
+    public UPnPServer getUpnpServer() {
+        return upnpServer;
+    }
+
+    public ArrayList<Device> getMyDeviceList() {
+        return myDeviceList;
+    }
+    
+    
 }

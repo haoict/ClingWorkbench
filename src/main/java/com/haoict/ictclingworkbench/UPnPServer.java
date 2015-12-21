@@ -29,75 +29,57 @@ public class UPnPServer {
     private RegistryListener listener = new RegistryListener() {
 
         @Override
-        public void remoteDeviceDiscoveryStarted(Registry registry,
-                RemoteDevice device) {
-            System.out.println(
-                    "Discovery started: " + device.getDisplayString()
-            );
+        public void remoteDeviceDiscoveryStarted(Registry registry, RemoteDevice device) {
+            System.out.println("Discovery started: " + device.getDisplayString());
         }
 
         @Override
         public void remoteDeviceDiscoveryFailed(Registry registry,
                 RemoteDevice device,
                 Exception ex) {
-            System.out.println(
-                    "Discovery failed: " + device.getDisplayString() + " => " + ex
-            );
+            System.out.println("Discovery failed: " + device.getDisplayString() + " => " + ex);
         }
 
         @Override
         public void remoteDeviceAdded(Registry registry, RemoteDevice device) {
-            System.out.println(
-                    "Remote device available: " + device.getDisplayString()
-            );
+            System.out.println("Remote device available: " + device.getDisplayString());
             // call method throgh interface IOnDeviceEvent on main frame
             onDeviceEvent.onDeviceAdded(device);
         }
 
         @Override
         public void remoteDeviceUpdated(Registry registry, RemoteDevice device) {
-            System.out.println(
-                    "Remote device updated: " + device.getDisplayString()
-            );
+            //System.out.println("Remote device updated: " + device.getDisplayString());
             // call method throgh interface IOnDeviceEvent on main frame
             onDeviceEvent.onDeviceUpdated(device);
         }
 
         @Override
         public void remoteDeviceRemoved(Registry registry, RemoteDevice device) {
-            System.out.println(
-                    "Remote device removed: " + device.getDisplayString()
-            );
+            System.out.println("Remote device removed: " + device.getDisplayString());
             // call method throgh interface IOnDeviceEvent on main frame
             onDeviceEvent.onDeviceRemoved(device);
         }
 
         @Override
         public void localDeviceAdded(Registry registry, LocalDevice device) {
-            System.out.println(
-                    "Local device added: " + device.getDisplayString()
-            );
+            System.out.println("Local device added: " + device.getDisplayString());
         }
 
         @Override
         public void localDeviceRemoved(Registry registry, LocalDevice device) {
-            System.out.println(
-                    "Local device removed: " + device.getDisplayString()
-            );
+            System.out.println("Local device removed: " + device.getDisplayString());
         }
 
         @Override
         public void beforeShutdown(Registry registry) {
-            System.out.println(
-                    "Before shutdown, the registry has devices: "
-                    + registry.getDevices().size()
+            System.out.println("Before shutdown, the registry has devices: " + registry.getDevices().size()
             );
         }
 
         @Override
         public void afterShutdown() {
             System.out.println("Shutdown of registry complete!");
-
         }
     };
 

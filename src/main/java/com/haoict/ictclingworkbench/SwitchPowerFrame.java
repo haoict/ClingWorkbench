@@ -5,6 +5,7 @@
  */
 package com.haoict.ictclingworkbench;
 
+import javax.swing.JOptionPane;
 import org.fourthline.cling.UpnpService;
 import org.fourthline.cling.controlpoint.ActionCallback;
 import org.fourthline.cling.model.action.ActionArgumentValue;
@@ -40,11 +41,11 @@ public class SwitchPowerFrame extends javax.swing.JFrame {
         try {
             this.upnpService = upnpService;
             this.device = device;
-            
+
             // Get service type "SwitchPower"
             service = device.findService(new UDAServiceType(SERVICE_NAME));
             //service = device.findService(new UDAServiceId(SERVICE_NAME));
-            
+
             // first, get its status, on or off, and display it 
             Action getStatusAction = service.getAction("GetStatus");
             ActionInvocation getStatusInvocation = new ActionInvocation(getStatusAction);
@@ -101,17 +102,17 @@ public class SwitchPowerFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(80, Short.MAX_VALUE)
-                .addComponent(jToggleButtonPower)
-                .addGap(77, 77, 77))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jToggleButtonPower, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(91, Short.MAX_VALUE)
-                .addComponent(jToggleButtonPower)
-                .addGap(61, 61, 61))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jToggleButtonPower, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -124,28 +125,32 @@ public class SwitchPowerFrame extends javax.swing.JFrame {
             jToggleButtonPower.setText("Press to turn On");
         }
 
+        try {
+            Action action = service.getAction("SetTarget");
+            ActionInvocation setTargetInvocation = new ActionInvocation(action);
+            setTargetInvocation.setInput("NewTargetValue", !isOn); // Can throw InvalidValueException
+            isOn = !isOn;
+            ActionCallback setTargetCallback = new ActionCallback(setTargetInvocation) {
+
+                @Override
+                public void success(ActionInvocation invocation) {
+                    ActionArgumentValue[] output = invocation.getOutput();
+                    //assertEquals(output.length, 0);
+                }
+
+                @Override
+                public void failure(ActionInvocation invocation,
+                        UpnpResponse operation,
+                        String defaultMsg) {
+                    System.err.println(defaultMsg);
+                }
+            };
+
+            upnpService.getControlPoint().execute(setTargetCallback);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
         // set target to service device
-        Action action = service.getAction("SetTarget");
-        ActionInvocation setTargetInvocation = new ActionInvocation(action);
-        setTargetInvocation.setInput("NewTargetValue", !isOn); // Can throw InvalidValueException
-        isOn = !isOn;
-        ActionCallback setTargetCallback = new ActionCallback(setTargetInvocation) {
-
-            @Override
-            public void success(ActionInvocation invocation) {
-                ActionArgumentValue[] output = invocation.getOutput();
-                //assertEquals(output.length, 0);
-            }
-
-            @Override
-            public void failure(ActionInvocation invocation,
-                    UpnpResponse operation,
-                    String defaultMsg) {
-                System.err.println(defaultMsg);
-            }
-        };
-
-        upnpService.getControlPoint().execute(setTargetCallback);
 
 
     }//GEN-LAST:event_jToggleButtonPowerActionPerformed
